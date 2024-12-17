@@ -86,10 +86,6 @@
                 <icon>far:edit fa-fw</icon>
                 <action>EditorTexto</action>
               </menuitem>
-              <menuitem label='Calendário Completo'>
-                <icon>far:address-card fa-fw</icon>
-                <action>FullCalendar</action>
-              </menuitem>
               <menuitem label='Kanban'>
                 <icon>fas:th fa-fw</icon>
                 <action>KanbanView</action>
