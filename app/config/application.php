@@ -16,9 +16,9 @@ return [
         'require_terms' => '0',
         'concurrent_sessions' => '1',
         'lang_options' => [
-          'pt' => 'Português',
-          'en' => 'English',
-          'es' => 'Español',
+            'pt' => 'Português',
+            'en' => 'English',
+            'es' => 'Español',
         ],
         'multi_database' => '0',
         'validate_strong_pass' => '1',
@@ -36,10 +36,10 @@ return [
     ],
     'permission' =>  [
         'public_classes' => [
-          'SystemRequestPasswordResetForm',
-          'SystemPasswordResetForm',
-          'SystemRegistrationForm',
-          'SystemPasswordRenewalForm',
+            'SystemRequestPasswordResetForm',
+            'SystemPasswordResetForm',
+            'SystemRegistrationForm',
+            'SystemPasswordRenewalForm',
         ],
         'user_register' => '1',
         'reset_password' => '1',
