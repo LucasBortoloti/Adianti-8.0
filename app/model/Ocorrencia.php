@@ -26,5 +26,6 @@ class Ocorrencia extends TRecord
         parent::addAttribute('status');
         parent::addAttribute('bairro_id');
         parent::addAttribute('logradouro_id');
+        parent::addAttribute('OCO_TIPOACAO');
     }
 }

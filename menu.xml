@@ -110,9 +110,9 @@
                 <icon>fas:database fa-fw</icon>
                 <action>SinistroList7</action>
               </menuitem>
-              <menuitem label='Sinistro, baixados e abertos antigo'>
+              <menuitem label='Sinistros, baixados e abertos, por Tipo de Ação'>
                 <icon>fas:database fa-fw</icon>
-                <action>SinistroList</action>
+                <action>SinistroListTipoAcao</action>
               </menuitem>
               <menuitem label='Vigepi PDF'>
                 <icon>fas:database fa-fw</icon>
