@@ -1,14 +1,22 @@
 <?php
 
+use Adianti\Control\TAction;
 use Adianti\Control\TPage;
+use Adianti\Control\TWindow;
 use Adianti\Database\TDatabase;
 use Adianti\Database\TTransaction;
 use Adianti\Validator\TRequiredValidator;
+use Adianti\Widget\Base\TElement;
+use Adianti\Widget\Container\TTable;
+use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Form\TDate;
 use Adianti\Widget\Form\TEntry;
+use Adianti\Widget\Form\TLabel;
 use Adianti\Widget\Form\TRadioGroup;
 use Adianti\Widget\Template\THtmlRenderer;
 use Adianti\Widget\Wrapper\TDBCombo;
+use Adianti\Widget\Wrapper\TDBUniqueSearch;
+use Adianti\Wrapper\BootstrapFormBuilder;
 
 class SinistroListTipoAcao extends TPage
 {
@@ -50,17 +58,26 @@ class SinistroListTipoAcao extends TPage
         $sinistro_id = new TDBUniqueSearch('sinistro_id', 'defciv', 'Sinistro', 'id', 'descricao');
         $sinistro_id->setMinLength(1);
         $sinistro_id->setMask('{descricao} ({id})');
+        $pesquisa = new TRadioGroup('pesquisa');
 
         $this->form->addFields([new TLabel('De')], [$date_from]);
         $this->form->addFields([new TLabel('Até')], [$date_to]);
         $this->form->addFields([new TLabel('Tipo Ação')], [$tipoacao]);
+        $this->form->addFields([new TLabel('Tipo de pesquisa')], [$pesquisa]);
+
 
         $date_from->addValidation('De', new TRequiredValidator);
         $date_to->addValidation('Até', new TRequiredValidator);
         $tipoacao->addValidation('Tipo de Ação', new TRequiredValidator);
+        $pesquisa->addValidation('Pesquisa', new TRequiredValidator);
 
         $date_from->setSize('65%');
         $date_to->setSize('65%');
+
+        $pesquisa->setUseButton();
+        $options = ['data_cadastro' => 'Data do Cadastro', 'data_evento' => 'Data do Evento', 'created_at' => 'Data de Criação'];
+        $pesquisa->addItems($options);
+        $pesquisa->setLayout('horizontal');
 
         $tipoacao->setUseButton();
         $options = ['P' => 'P', 'R' => 'R'];
@@ -89,6 +106,7 @@ class SinistroListTipoAcao extends TPage
             $date_from = $data->date_from;
             $date_to = $data->date_to;
             $tipoacao = $data->tipoacao;
+            $pesquisa = $data->pesquisa;
 
             $this->form->setData($data);
 
@@ -112,7 +130,7 @@ class SinistroListTipoAcao extends TPage
                     ) as ABERTAS 
             FROM            defciv.ocorrencia       as ocorrencia 
             left join       defciv.sinistro         as sinistro      on sinistro_id = sinistro.id 
-            where ocorrencia.created_at >= '{$date_from}' and ocorrencia.created_at <= '{$date_to}' and ocorrencia.OCO_TIPOACAO = '{$tipoacao}'
+            where ocorrencia.{$pesquisa} >= '{$date_from}' and ocorrencia.{$pesquisa} <= '{$date_to}' and ocorrencia.OCO_TIPOACAO = '{$tipoacao}'
             group by         sinistro_id
                     ,sinistro_descricao 
             order by        sinistro_descricao";
@@ -126,7 +144,7 @@ class SinistroListTipoAcao extends TPage
             $content = '<html>
             <head> 
                 <title>Ocorrencias</title>
-                <link href="app/resources/sinistro.css" rel="stylesheet" type="text/css" media="screen"/>
+                <link href="app/resources/sinistro_tipo_acao.css" rel="stylesheet" type="text/css" media="screen"/>
             </head>
             <footer></footer>
             <body>
@@ -144,7 +162,7 @@ class SinistroListTipoAcao extends TPage
                         </tr>
                         <tr>
                             <td>(047) 2106-8000</td>
-                            <td class="cor_ocorrencia colspan=4">Ocorrência de ' . $date_from_formatado . ' até ' . $date_to_formatado . '</td>                     
+                            <td class="cor_ocorrencia colspan=4">Ocorrência de ' . $date_from_formatado . ' até ' . $date_to_formatado . ' por tipo de ação ' . $tipoacao . '</td>                  
                         </tr>
                     </table>
                 </div>
