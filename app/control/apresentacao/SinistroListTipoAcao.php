@@ -148,24 +148,23 @@ class SinistroListTipoAcao extends TPage
             </head>
             <footer></footer>
             <body>
-                <div class="header">
-                    <table class="cabecalho" style="width:100%">
-                        <tr>
-                            <td><b><i>PREFEITURA MUNICIPAL DE JARAGUÁ DO SUL</i></b></td>
-                        </tr>
-                        <tr>
-                            <td> prefeitura@jaraguadosul.com.br</td>
-                        </tr>
-                        <tr>
-                            <td>83.102.459/0001-23</td>
-                            <td class="data_hora"><b>' . $data . '</b></td>
-                        </tr>
-                        <tr>
-                            <td>(047) 2106-8000</td>
-                            <td class="cor_ocorrencia colspan=4">Ocorrência de ' . $date_from_formatado . ' até ' . $date_to_formatado . ' por tipo de ação ' . $tipoacao . '</td>                  
-                        </tr>
-                    </table>
+               <div class="header">
+               <table class="cabecalho" style="width:100%">
+                    <tr>
+                        <td colspan="2">
+                        <img src="app/images/logo_prefeitura.jpeg" class="logo_a_esquerda">
+                        <img src="app/images/logo_defesa_civil.png" class="logo_a_direita">
+                <div style="text-align: center;">
+                        ESTADO DE SANTA CATARINA<br>
+                        MUNICÍPIO DE SANTA CATARINA<br>
+                        GABINETE DO PREFEITO<br>
+                        DIRETORIA DE PROTEÇÃO E DEFESA CIVIL
                 </div>
+                        </td>
+                    </tr>
+                </table>        
+                </div>
+
                 <table class="borda_tabela" style="width: 100%">
                     <tr>
                         <td class="borda_inferior_centralizador"><b>Id</b></td> 
