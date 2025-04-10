@@ -114,6 +114,10 @@
                 <icon>fas:database fa-fw</icon>
                 <action>SinistroListTipoAcao</action>
               </menuitem>
+              <menuitem label='Sinistros por Tipo de sinistro'>
+                <icon>fas:database fa-fw</icon>
+                <action>SinistroListPorSinistro</action>
+              </menuitem>
               <menuitem label='Vigepi PDF'>
                 <icon>fas:database fa-fw</icon>
                 <action>VigepiList</action>
