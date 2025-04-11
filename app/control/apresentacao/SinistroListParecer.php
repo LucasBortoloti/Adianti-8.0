@@ -18,7 +18,7 @@ use Adianti\Widget\Wrapper\TDBCombo;
 use Adianti\Widget\Wrapper\TDBUniqueSearch;
 use Adianti\Wrapper\BootstrapFormBuilder;
 
-class SinistroListPorSinistro extends TPage
+class SinistroListParecer extends TPage
 {
     protected $form;     // registration form
     protected $datagrid; // listing
@@ -47,34 +47,20 @@ class SinistroListPorSinistro extends TPage
         });
 
         $this->form = new BootstrapFormBuilder('form_search_Ocorrencias');
-        $this->form->setFormTitle(('Sinistros, baixados e abertos por tipo de sinistro'));
+        $this->form->setFormTitle(('Pareceres Emitidos'));
 
         // $id = new TEntry('id');
         $date_from = new TDate('date_from');
         $date_to = new TDate('date_to');
 
-        $tipo_sinistro = new TDBCombo('tipo_sinistro', 'defciv', 'Sinistro', 'id', 'descricao');
-        $pesquisa = new TRadioGroup('pesquisa');
-
         $this->form->addFields([new TLabel('De')], [$date_from]);
         $this->form->addFields([new TLabel('Até')], [$date_to]);
-        $this->form->addFields([new TLabel('Tipo de Sinistro')], [$tipo_sinistro]);
-        $this->form->addFields([new TLabel('Tipo de pesquisa')], [$pesquisa]);
-
 
         $date_from->addValidation('De', new TRequiredValidator);
         $date_to->addValidation('Até', new TRequiredValidator);
-        $tipo_sinistro->addValidation('Tipo de Sinistro', new TRequiredValidator);
-        $pesquisa->addValidation('Pesquisa', new TRequiredValidator);
 
-        $tipo_sinistro->setSize('65%');
         $date_from->setSize('65%');
         $date_to->setSize('65%');
-
-        $pesquisa->setUseButton();
-        $options = ['data_cadastro' => 'Data do Cadastro', 'data_evento' => 'Data do Evento', 'created_at' => 'Data de Criação'];
-        $pesquisa->addItems($options);
-        $pesquisa->setLayout('horizontal');
 
         $this->form->addAction('Gerar', new TAction(array($this, 'onGenerate')), 'fa:download blue');
 
@@ -97,34 +83,30 @@ class SinistroListPorSinistro extends TPage
 
             $date_from = $data->date_from;
             $date_to = $data->date_to;
-            $pesquisa = $data->pesquisa;
-            $tipo_sinistro = $data->tipo_sinistro;
 
             $this->form->setData($data);
 
             $source = TTransaction::open('defciv');
 
-            $query = "  SELECT sinistro_id,
-                    sinistro.descricao     as sinistro_descricao
-                    ,count(*)               as QTDE
-                    ,sum( 
-                        case status 
-                            when 'B' then 1 
-                            when 'A' then 0 
-                        end
-                    ) as BAIXADAS, 
-                    sum( 
-                        case status 
-                            when 'B' then 0 
-                            when 'A' then 1 
-                        end 
-                    ) as ABERTAS 
-            FROM            defciv.ocorrencia       as ocorrencia 
-            left join       defciv.sinistro         as sinistro      on sinistro_id = sinistro.id 
-            where ocorrencia.{$pesquisa} >= '{$date_from}' and ocorrencia.{$pesquisa} <= '{$date_to}' and sinistro.id = {$tipo_sinistro}
-            group by         sinistro_id
-                    ,sinistro_descricao 
-            order by        sinistro_descricao";
+            $query = " SELECT o.id as ocorrencia_id,
+					o.solicitante as solicitante,
+					o.logradouro_id as logradouro_num,
+					o.bairro_id as bairro_id,
+					o.interdicao_lote_num as lote_interdicao,
+					o.OCO_PARECER as parecer,
+					o.OCO_PARECERDATA as parecer_data,
+            		o.status as status,
+            		o.sinistro_id as sinistro_id,
+            		s.descricao as sinistro_descricao,
+            		l.nome as logradouro_nome,
+            		b.nome as bairro_nome
+                    	from defciv.ocorrencia o
+                   left join defciv.sinistro s on s.id = o.sinistro_id
+                   left join vigepi.bairro b on b.id = o.bairro_id
+                   left join vigepi.logradouro l on l.id = o.logradouro_id
+               where o.OCO_PARECERDATA >= '{$date_from}' and o.OCO_PARECERDATA <= '{$date_to}'
+                   group by solicitante, parecer_data
+				   order by parecer_data, solicitante";
 
             $rows = TDatabase::getData($source, $query, null, null);
 
@@ -135,7 +117,7 @@ class SinistroListPorSinistro extends TPage
             $content = '<html>
             <head> 
                 <title>Ocorrencias</title>
-                <link href="app/resources/sinistro_tipo_acao.css" rel="stylesheet" type="text/css" media="screen"/>
+                <link href="app/resources/sinistro_parecer.css" rel="stylesheet" type="text/css" media="screen"/>
             </head>
             <footer></footer>
             <body>
@@ -158,38 +140,38 @@ class SinistroListPorSinistro extends TPage
 
                 <table class="borda_tabela" style="width: 100%">
                     <tr>
-                        <td class="borda_inferior_centralizador"><b>Id</b></td> 
-                        <td class="borda_inferior"><b>Descrição</b></td>
-                        <td class="borda_inferior_centralizador"><b>Quantidade</b></td>
-                        <td class="borda_inferior_centralizador"><b>Baixadas</b></td>
-                        <td class="borda_inferior_centralizador"><b>Abertas</b></td>
+                        <td class="borda_inferior_centralizador"><b>Ocorrencia Id</b></td> 
+                        <td class="borda_inferior"><b>Solicitante</b></td>
+                        <td class="borda_inferior_centralizador"><b>Logradouro Num</b></td>
+                        <td class="borda_inferior_centralizador"><b>Bairro Id</b></td>
+                        <td class="borda_inferior_centralizador"><b>Interdição Lote</b></td>
+                        <td class="borda_inferior_centralizador"><b>Parecer</b></td>
+                        <td class="borda_inferior_centralizador"><b>Parecer Data</b></td>
+                        <td class="borda_inferior_centralizador"><b>Status</b></td>
+                        <td class="borda_inferior_centralizador"><b>Sinistro Id</b></td>
+                        <td class="borda_inferior_centralizador"><b>Sinistro Descrição</b></td>
+                        <td class="borda_inferior_centralizador"><b>Logradouro</b></td>
+                        <td class="borda_inferior_centralizador"><b>Bairro</b></td>
                     </tr>';
-
-            $totalQtde = 0;
-            $totalBaixadas = 0;
-            $totalAbertas = 0;
 
             foreach ($rows as $row) {
                 $content .= "<tr>
-                                <td class='borda_direita'>{$row['sinistro_id']}</td>
+                                <td class='borda_direita'>{$row['ocorrencia_id']}</td>
+                                <td class='direita'>{$row['solicitante']}</td>
+                                <td class='direita'>{$row['logradouro_num']}</td>
+                                <td class='direita'>{$row['bairro_id']}</td>
+                                <td class='direita'>{$row['lote_interdicao']}</td>
+                                <td class='direita'>{$row['parecer']}</td>
+                                <td class='direita'>{$row['parecer_data']}</td>
+                                <td class='direita'>{$row['status']}</td>
+                                <td class='direita'>{$row['sinistro_id']}</td>
                                 <td class='direita'>{$row['sinistro_descricao']}</td>
-                                <td class='borda_direita_esquerda'>{$row['QTDE']}</td>
-                                <td class='borda_direita_esquerda'>{$row['BAIXADAS']}</td>
-                                <td class='centralizar'>{$row['ABERTAS']}</td>
+                                <td class='direita'>{$row['logradouro_nome']}</td>
+                                <td class='direita'>{$row['bairro_nome']}</td>
                             </tr>";
-
-                $totalQtde += $row['QTDE'];
-                $totalBaixadas += $row['BAIXADAS'];
-                $totalAbertas += $row['ABERTAS'];
             }
 
-            $content .= "<tr>
-                            <td class='espaco_para_direta' colspan=2><b>Total:</b></td>
-                            <td class='centralizador_com_borda_esquerda'><b>{$totalQtde}</b></td>
-                            <td class='centralizador_com_borda'><b>{$totalBaixadas}</b></td>
-                            <td class='centralizador_com_borda'><b>{$totalAbertas}</b></td>    
-                        </tr>
-                    </table>
+            $content .= "</table>
                 </body>
             </html>";
 
@@ -201,7 +183,7 @@ class SinistroListPorSinistro extends TPage
             $options->setChroot(getcwd());
             $dompdf = new \Dompdf\Dompdf($options);
             $dompdf->loadHtml($content);
-            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->setPaper('A4', 'landscape');
             $dompdf->render();
 
             file_put_contents('app/output/document.pdf', $dompdf->output());

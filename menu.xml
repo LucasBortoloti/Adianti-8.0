@@ -118,6 +118,10 @@
                 <icon>fas:database fa-fw</icon>
                 <action>SinistroListPorSinistro</action>
               </menuitem>
+              <menuitem label='Pareceres Emitidos'>
+                <icon>fas:database fa-fw</icon>
+                <action>SinistroListParecer</action>
+              </menuitem>
               <menuitem label='Vigepi PDF'>
                 <icon>fas:database fa-fw</icon>
                 <action>VigepiList</action>
