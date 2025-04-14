@@ -32,6 +32,12 @@ body {
     padding-right: 5px;
 }
 
+.borda_direita_esquerda_sem_padding {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    text-align: center;
+}
+
 .total {
     border-top: 1px solid black;
     padding-top: 10px;
@@ -129,6 +135,12 @@ body {
 .solicitante {
     font-weight: bold;
     color: #032a61;
+}
+
+.centralizador_com_borda_sem_padding {
+    border-top: 1px solid black;
+    text-align: center;
+    border-right: 1px solid black;
 }
 
 .centralizador_com_borda {

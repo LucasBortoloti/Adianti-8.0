@@ -13,41 +13,34 @@ class AdiantiRestServer
         $class    = isset($request['class']) ? $request['class']   : '';
         $method   = isset($request['method']) ? $request['method'] : '';
         $response = NULL;
-        
+
         // aqui implementar mecanismo de controle !!
-        if (get_parent_class($class) !== 'Adianti\Service\AdiantiRecordService')
-        {
+        if (get_parent_class($class) !== 'Adianti\Service\AdiantiRecordService') {
             http_response_code(401);
-            return json_encode( array('status' => 'error',
-                                      'data'   => _t('Permission denied')));
+            return json_encode(array(
+                'status' => 'error',
+                'data'   => _t('Permission denied')
+            ));
         }
-        
-        try
-        {
+
+        try {
             $response = AdiantiCoreApplication::execute($class, $method, $request, 'rest');
-            if (is_array($response))
-            {
+            if (is_array($response)) {
                 array_walk_recursive($response, ['AdiantiStringConversion', 'assureUnicode']);
             }
-            return json_encode( array('status' => 'success', 'data' => $response));
-        }
-        catch (Exception $e)
-        {
-            if(200 === http_response_code())
-            {
+            return json_encode(array('status' => 'success', 'data' => $response));
+        } catch (Exception $e) {
+            if (200 === http_response_code()) {
                 http_response_code(500);
             }
 
-            return json_encode( array('status' => 'error', 'data' => $e->getMessage()));
-        }
-        catch (Error $e)
-        {
-            if(200 === http_response_code())
-            {
+            return json_encode(array('status' => 'error', 'data' => $e->getMessage()));
+        } catch (Error $e) {
+            if (200 === http_response_code()) {
                 http_response_code(500);
             }
 
-            return json_encode( array('status' => 'error', 'data' => $e->getMessage()));
+            return json_encode(array('status' => 'error', 'data' => $e->getMessage()));
         }
     }
 }

@@ -122,6 +122,10 @@
                 <icon>fas:database fa-fw</icon>
                 <action>SinistroListParecer</action>
               </menuitem>
+              <menuitem label='Sinistros por FGTS'>
+                <icon>fas:database fa-fw</icon>
+                <action>SinistroListFGTS</action>
+              </menuitem>
               <menuitem label='Vigepi PDF'>
                 <icon>fas:database fa-fw</icon>
                 <action>VigepiList</action>

@@ -7,7 +7,7 @@ return [
         'title' => 'Adianti Template 8.0',
         'theme' => 'adminbs5',
         'seed' => 'odfu6asnodf8as',
-        'rest_key' => '',
+        'rest_key' => '123',
         'multiunit' => '1',
         'public_view' => '0',
         'public_entry' => '',
