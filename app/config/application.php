@@ -3,7 +3,7 @@ return [
     'general' =>  [
         'timezone' => 'America/Sao_Paulo',
         'language' => 'pt',
-        'application' => 'template',
+        'application' => 'adianti8',
         'title' => 'Adianti Template 8.0',
         'theme' => 'adminbs5',
         'seed' => 'odfu6asnodf8as',
